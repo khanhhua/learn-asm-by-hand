@@ -1,0 +1,10 @@
+version: '3'
+services:
+  linux386:
+    build:
+      context: .
+    command: bash
+    volumes:
+      - ./hello:/src/hello
+      - ./flags:/src/flags
+
