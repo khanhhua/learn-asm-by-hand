@@ -3,7 +3,7 @@ BUILD_DIR := ./build
 
 $(BUILD_DIR)/arith-x86.o:
 	mkdir -p $(dir $@)
-	nasm -o $@ -f elf32 arith-x86.s
+	nasm -o $@ -f elf32 -g -F dwarf arith-x86.s
 
 arith-x86: $(BUILD_DIR)/arith-x86.o
 	ld -o $(BUILD_DIR)/$@ $?
@@ -13,4 +13,4 @@ clean:
 
 run: clean arith-x86
 	$(BUILD_DIR)/arith-x86
-	
+

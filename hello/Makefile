@@ -4,10 +4,10 @@ BUILD_DIR := ./build
 
 $(BUILD_DIR)/hello-x86.o:
 	mkdir -p $(dir $@)
-	nasm -o $(BUILD_DIR)/hello-x86.o -f elf32 hello-x86.s
+	nasm -o $(BUILD_DIR)/hello-x86.o -f elf32 -g -F dwarf hello-x86.s
 
 hello-x86: $(BUILD_DIR)/hello-x86.o
-	ld -o $(BUILD_DIR)/hello-x86 -g $(BUILD_DIR)/hello-x86.o
+	ld -o $(BUILD_DIR)/$@ -m elf_i386 $?
 
 .PHONY: clean
 clean:

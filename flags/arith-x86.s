@@ -2,45 +2,55 @@ section .data
         greeting        db "Welcome to Arith Station",0,0xA
         greetingLen     equ $-greeting
 
-        zeroFlagMsg    db "Zero Flag on",0,0xA
-        zeroFlagMsgLen equ $-zeroFlagMsg
+        zeroFlagOnMsg   db "Zero Flag: 1",0,0xA
+        zeroFlagOffMsg  db "Zero Flag: 0",0,0xA
+        flagMsgLen      equ $-zeroFlagOffMsg
+        signFlagOnMsg   db "Sign Flag: 1",0,0xA
+        signFlagOffMsg  db "Sign Flag: 0",0,0xA
 
 section .text
 
 global  _start
         _start:
         ; Print the greeting
-        mov eax, 0x04
-        mov ebx, 0x01
-        mov ecx, greeting
-        mov edx, greetingLen
-        int 0x80
+        ; mov eax, 0x04
+        ; mov ebx, 0x01
+        ; mov ecx, greeting
+        ; mov edx, greetingLen
+        ; int 0x80
 
         ; Do math and check flags
-        mov eax, 0xFFFF
-        sub eax, eax
-        ; Do a core flagsdump
-        jz show_zero_flag
-        jmp EXIT
+        mov eax, 0x00000111
+        and eax, 0x00000000
+        call flagsdump
 
-        show_zero_flag:
-        ; Print carry flag on message
-        mov eax, 0x04
-        mov ebx, 0x01
-        mov ecx, zeroFlagMsg
-        mov edx, zeroFlagMsgLen
-        int 0x80
+        ; Do a core flagsdump
+        ; jz show_zero_flag
         jmp EXIT
 
         flagsdump:
-        pushf
+        pushfd
+        test dword [esp], 0x80          ; flags: ZERO 0x40, SIGN 0x80
         mov eax, 0x04
         mov ebx, 0x01
- 
-        pop ecx
-        mov edx, 0x04
+        mov edx, flagMsgLen
+
+        mov ecx, signFlagOnMsg
+        jnz .skipnext1
+        mov ecx, signFlagOffMsg
+        .skipnext1:
         int 0x80
-        ret             ; Set EBP back to callee frame
+
+        test dword [esp], 0x40          ; flags: ZERO 0x40, SIGN 0x80
+        mov eax, 0x04
+        mov ebx, 0x01
+        mov edx, flagMsgLen
+
+        mov ecx, zeroFlagOnMsg
+        jnz .skipnext0
+        mov ecx, zeroFlagOffMsg
+        .skipnext0:
+        int 0x80
 
         EXIT:
         mov eax, 0x01

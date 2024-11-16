@@ -1,4 +1,3 @@
-global  _start
 section .data
 
         msg:     db      "Hello World",0xA,0
@@ -7,6 +6,8 @@ section .data
 section .bss
 
 section .text
+        global  _start
+
         _start:
         mov ebx, 0x01
         mov ecx, msg
