@@ -1,5 +1,8 @@
+; Stack width is so wide as the architecture
+; byte = db
+; word = dw
+; double-word = dd
 section .data
-        num     dd      192
 
 section .bss
 
@@ -7,16 +10,18 @@ section .text
 
 global _start
         _start:
-        call print_int
+        push 0x0000022C         ; 4bytes less on the stack
+        call print_int          ; call label does push $eip onto stack
 
         mov eax, 0x01
         mov ebx, 0x00
         int 0x80
 
-        print_int:
+        print_int:              ; print_int doubleword=32bit
+        ; 4bytes for the first param
         sub esp, 0x03           ; Reserves 3 bytes on stack for char str[3]
-        lea ecx, [esp + 0x02]
-        mov eax, [num]
+        lea ecx, [esp + 2]
+        mov eax, [esp + 7]      ; Points eax to the 1st param (of 4bytes in size)
         mov ebx, 0x0A
         .loop:
         mov edx, 0
@@ -34,5 +39,5 @@ global _start
         int 0x80
 
         add esp, 0x03
-        ret
+        ret                     ; used in tandem with "call", pops stack to $eip
 
