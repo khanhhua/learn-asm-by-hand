@@ -18,3 +18,6 @@ build-all: $(PROGS)
 arith-x86: clean build/arith-x86
 	$(BUILD_DIR)/arith-x86
 
+bigint: clean build/bigint
+	$(BUILD_DIR)/bigint
+
