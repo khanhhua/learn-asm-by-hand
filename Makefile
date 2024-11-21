@@ -1,5 +1,5 @@
 SRCS := $(wildcard *.s)
-BUILD_DIR := ./build
+BUILD_DIR := build
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 PROGS := $(SRCS:%.s=$(BUILD_DIR)/%)
 
@@ -15,6 +15,6 @@ clean:
 
 build-all: $(PROGS)
 
-print: clean build/print
-	$(BUILD_DIR)/print
+%: clean build/%
+	$(BUILD_DIR)/$@
 
