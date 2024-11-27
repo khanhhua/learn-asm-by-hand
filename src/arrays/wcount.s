@@ -18,9 +18,17 @@ _start: mov ecx, [esp]         ; how many args are there?
         mov ecx, [esp + 8]
         mov dword [constp_fname], ecx
 
-        mov edi, ecx            ; search
+        push 80
+        push dword [constp_fname]
+        call printn
+
+        jmp EXIT
+
+printn: push ebp                ; void printn(const char*, int)
+        mov ebp, esp
+        mov edi, [ebp+8]            ; search
         mov eax, 0x00           ; ..for null
-        mov ecx, 80             ; ..with upper limit
+        mov ecx, [ebp+12]             ; ..with upper limit
         repne scasb             ; by repeatedly comparing [edi] with eax
         jnz EXIT                ; Your string is damn long!
         dec edi
@@ -31,6 +39,11 @@ _start: mov ecx, [esp]         ; how many args are there?
         mov ebx, 0x01
         mov ecx, [constp_fname] ; load the pointer to ecx
         int 0x80
+
+        ; Leave!
+        mov esp, ebp
+        pop ebp
+        ret 8
 
 EXIT:   mov eax, 0x01
         mov ebx, 0x00
