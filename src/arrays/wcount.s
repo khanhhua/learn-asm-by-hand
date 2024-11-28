@@ -32,11 +32,17 @@ _start: mov ecx, [esp]         ; how many args are there?
         int 0x80
 
         mov [esp], eax
-        call readline
+        .readloop:
+        call readline           ; Result for bytes read is in eax
+        cmp eax, 0
+        jz EXIT
+        sub esp, 12             ; Recover function parameters for readline
 
-        push 65
+        push 65                 ; printn(&buffer, 65)
         push buffer
         call printn
+
+        jmp .readloop
 
 
 EXIT:   mov eax, 0x01
