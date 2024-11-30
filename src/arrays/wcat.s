@@ -1,5 +1,5 @@
-; TITLE WordCount -- count the word in a file
-; synopsis: wcount inputfile
+; TITLE WordCat -- cat content in a file
+; synopsis: wcat inputfile
 section .data
         constp_fname dd 0x00000000      ; const pointer to filename
 
