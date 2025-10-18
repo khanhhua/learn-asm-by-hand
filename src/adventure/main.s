@@ -2,7 +2,7 @@ global _start
 
 %macro PRINT 2
 	mov eax, 0x04
-	mov ecx, %1 
+	mov ecx, %1
 	mov edx, %2
 	int 0x80
 %endmacro
@@ -26,12 +26,16 @@ Q2_2:
 Q2_2_LEN: equ $-Q2_2
 
 Q2_2_1:
-  db "You took the axe. You now move slower but more secured.", 10, 0
+  db "You took the axe. You now move slower but more secured toward the beach.", 10, 0
 Q2_2_1_LEN: equ $-Q2_2_1
 
 Q2_2_2:
   db "You left the axe, and moved further toward the beach.", 10, 0
 Q2_2_2_LEN: equ $-Q2_2_2
+
+Q2_3:
+  db "The beach - standard white tropical sand.", 10, 0
+Q2_3_LEN: equ $-Q2_3
 
 section .bss
 
@@ -47,12 +51,12 @@ _start:
   pop eax
 
   cmp eax, 'y'  ; You die for 'y'
-  jne the_beach
+  jne toward_ocean
   PRINT Q2_1, Q2_1_LEN
   call readline
   jmp exit
 
-  the_beach:
+  toward_ocean:
   PRINT Q2_2, Q2_2_LEN
   push 0
   call readline
@@ -62,10 +66,14 @@ _start:
   jne the_beach_no_axe
   PRINT Q2_2_1, Q2_2_1_LEN
   call readline
-  jmp exit
+  jmp the_beach
 
   the_beach_no_axe:
   PRINT Q2_2_2, Q2_2_2_LEN
+  call readline
+
+  the_beach:
+  PRINT Q2_3, Q2_3_LEN
   call readline
 
 	jmp exit
@@ -76,7 +84,7 @@ readline:
   lea ecx, [esp + 4]
 	mov edx, 2
 	int 0x80
-  
+
   mov eax, [esp + 4] 
   and eax, 0x00FF
   mov [esp + 4], eax
