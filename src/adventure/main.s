@@ -42,6 +42,12 @@ section .bss
 section .text
 
 _start:
+  ; Manually setup outermost stackframe
+  push ebp
+  mov ebp, esp
+  
+  call backpack_init
+
   PRINT Q1, Q1_LEN
 	call readline
 
@@ -64,6 +70,10 @@ _start:
 
   cmp eax, 'y'
   jne the_beach_no_axe
+
+  push BP_AXE_NAME
+  call backpack_add
+  
   PRINT Q2_2_1, Q2_2_1_LEN
   call readline
   jmp the_beach
@@ -95,3 +105,5 @@ exit:
 	mov eax, 0x01
 	mov ebx, 0
 	int 0x80
+
+%include "./src/adventure/backpack.s"

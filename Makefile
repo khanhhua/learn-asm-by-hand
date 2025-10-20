@@ -14,6 +14,10 @@ run:
 	make $(BUILD_DIR)/src/$(MOD) && \
 		$(BUILD_DIR)/src/$(MOD)
 
+debug:
+	make $(BUILD_DIR)/src/$(MOD) && \
+		gdb $(BUILD_DIR)/src/$(MOD)
+
 clean:
 	rm -rf $(BUILD_DIR)
 
